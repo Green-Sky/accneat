@@ -88,7 +88,7 @@ InnovationParms::InnovationParms(real_t w,
 IndividualInnovation::IndividualInnovation(int population_index_,
                                            InnovationId id_,
                                            InnovationParms parms_,
-                                           ApplyFunc apply_) 
+                                           ApplyFunc apply_)
     : population_index(population_index_)
     , id(id_)
     , parms(parms_) {
@@ -125,11 +125,13 @@ void PopulationInnovations::init(int node_id, int innov_num) {
     cur_node_id = node_id;
     cur_innov_num = innov_num;
 
-    innovations.resize( omp_get_max_threads() );
+    //innovations.resize( omp_get_max_threads() );
+    innovations.resize( 1 );
 }
 
 void PopulationInnovations::add(const IndividualInnovation &innov) {
-    innovations[omp_get_thread_num()].push_back(innov);
+    //innovations[omp_get_thread_num()].push_back(innov);
+    innovations[0].push_back(innov);
 }
 
 void PopulationInnovations::apply() {
@@ -144,12 +146,12 @@ void PopulationInnovations::apply() {
     vector<IndividualInnovation> masters;
     for(auto &kv: id2inds) {
         auto &inds = kv.second;
-  
+
         sort(inds.begin(), inds.end(), cmp_ind);
-  
+
         auto &master = inds.front();
         masters.push_back(master);
-    }        
+    }
 
     sort(masters.begin(), masters.end(), cmp_ind);
 
